@@ -1,0 +1,26 @@
+{
+  "name": "usd-shorts-factory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Usine à Shorts TikTok/YouTube pour Urban Survival District — un template Remotion réutilisable pour chaque nouvel article pilier.",
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render USDShort out/video.mp4",
+    "still": "remotion still USDShort out/thumbnail.png",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.502",
+    "@remotion/google-fonts": "4.0.502",
+    "@remotion/zod-types": "4.0.502",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.502",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "typescript": "5.5.4",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.3"
+  }
+}

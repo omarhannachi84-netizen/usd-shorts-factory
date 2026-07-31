@@ -1,0 +1,80 @@
+{
+  "name": "USD Shorts — Déclencheur de rendu Remotion",
+  "active": false,
+  "nodes": [
+    {
+      "id": "fb36042d-b500-4fd9-a6a1-3c971fffdf2f",
+      "name": "Webhook — Nouveau short à rendre",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "usd-render-short",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "74f653a1-c93b-45ae-9ff8-f04accfa777a",
+      "name": "Déclencher GitHub Actions (render.yml)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.github.com/repos/VOTRE_ORG/usd-shorts-factory/dispatches",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"event_type\": \"render-short\",\n  \"client_payload\": {\n    \"audioUrl\": $json.audioUrl,\n    \"audioFileName\": $json.audioFileName,\n    \"compositionId\": $json.compositionId || \"USDShort\",\n    \"props\": $json.props\n  }\n} }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REMPLACER_PAR_ID_CREDENTIAL",
+          "name": "GitHub PAT (repo + workflow scope)"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "ddc5b226-7699-477d-8e8a-9c0a7ad79caf",
+      "name": "Répondre au webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [790, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"dispatched\", \"github_status\": $json.statusCode ?? 204 } }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook — Nouveau short à rendre": {
+      "main": [
+        [
+          { "node": "Déclencher GitHub Actions (render.yml)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Déclencher GitHub Actions (render.yml)": {
+      "main": [
+        [
+          { "node": "Répondre au webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
