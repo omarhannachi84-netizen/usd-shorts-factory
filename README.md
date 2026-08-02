@@ -79,6 +79,18 @@ Le MP4 rendu apparaît en artifact téléchargeable dans l'onglet **Actions** du
 
 ⚠️ **Ce que je n'ai pas fait à ta place** : créer le repo GitHub, générer le token, connecter le compte n8n — ce sont des accès à toi, je ne peux pas les configurer depuis cette conversation. Je t'ai livré la mécanique, pas les identifiants.
 
+## 🎥 Fond réel, bulle avatar, pattern interrupt
+
+Le gabarit supporte maintenant du vrai métrage, pas seulement des cartes de texte :
+
+- **`background`** (optionnel, sur les scènes `stat`/`point`/`quote`/`cta`) — une image ou vidéo réelle en plein cadre derrière le texte, avec un voile sombre automatique pour la lisibilité. Fichiers dans `public/images/` ou `public/video/`.
+- **`avatarBubbleSrc`** (optionnel, au niveau racine) — ton clip avatar qui parle en continu (export ElevenLabs Synchronisation labiale), affiché en bulle ronde en bas à gauche, par-dessus tout le reste, à partir de la fin du hook vidéo.
+- **Scène `hookVideo`** — le pattern interrupt plein cadre (ex: l'avatar qui toque sur la caméra, généré via Kling Motion Control). Doit être la première scène si utilisée.
+
+Exemple dans `src/data/feux-de-foret-2026.ts`. Les fichiers actuellement présents dans `public/video/` et `public/images/` sont des **placeholders** (fond uni + texte) — remplace-les par tes vrais fichiers en gardant exactement les mêmes noms, ou mets à jour les noms dans le fichier de données.
+
+⚠️ **Sourcing des images/vidéos de fond** : pour du contenu réel (pompiers, incendies), utilise des sources libres de droits (Pexels, Pixabay, Wikimedia Commons) pour du B-roll générique, ou une licence presse (AFP/Reuters) si tu veux spécifiquement les vraies images de l'événement 2026. Ne pas utiliser d'images générées par IA présentées comme du métrage réel.
+
 ## Rendu
 
 ```bash

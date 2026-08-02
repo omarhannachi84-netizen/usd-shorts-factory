@@ -13,13 +13,13 @@ export const feuxDeForet2026: USDShortProps = {
   fps: 30,
   backgroundColor: theme.color.background,
   audioFileName: "feux-de-foret-2026.mp3", // à déposer dans public/audio/
+  avatarBubbleSrc: "avatar-feux-de-foret-2026.mp4", // ton export ElevenLabs (lip-sync), à déposer dans public/video/
   captionsEnabled: true,
   scenes: [
     {
-      type: "hook",
+      type: "hookVideo",
       durationInSeconds: 3,
-      eyebrow: "Été 2026",
-      text: "Les feux de forêt battent des records en France.",
+      src: "hook-toc-toc.mp4", // le clip pattern interrupt (Kling), à déposer dans public/video/
     },
     {
       type: "stat",
@@ -27,6 +27,7 @@ export const feuxDeForet2026: USDShortProps = {
       value: "42 000 ha",
       label: "déjà brûlés à la mi-juillet 2026 — un record",
       source: "EFFIS / Touteleurope, 2026",
+      background: { type: "video", src: "pompiers-foret-intervention.mp4" },
     },
     {
       type: "point",
@@ -51,6 +52,7 @@ export const feuxDeForet2026: USDShortProps = {
       total: 3,
       title: "Rester Utile",
       text: "Premiers secours et entraide, une fois en sécurité.",
+      background: { type: "image", src: "pompiers-foret-briefing.jpg" },
     },
     {
       type: "quote",

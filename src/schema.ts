@@ -6,14 +6,36 @@ import { zColor } from "@remotion/zod-types";
  * calée à l'oreille sur la voix off ElevenLabs (voir README, section "Workflow").
  */
 
+const backgroundMediaSchema = z
+  .object({
+    type: z.enum(["image", "video"]),
+    src: z.string().describe("Nom du fichier dans public/images/ ou public/video/"),
+  })
+  .optional()
+  .describe(
+    "Fond réel en plein cadre (ex: intervention pompiers en forêt). Si absent, fond uni + lueur Braise par défaut."
+  );
+
 const baseScene = z.object({
   durationInSeconds: z.number().positive(),
+  background: backgroundMediaSchema,
 });
 
 export const hookSceneSchema = baseScene.extend({
   type: z.literal("hook"),
   eyebrow: z.string().describe("Petit label au-dessus du hook (ex: ÉTÉ 2026)"),
   text: z.string().describe("Phrase choc, courte, 6-10 mots max"),
+});
+
+/**
+ * Scène "hook vidéo" — le pattern interrupt : un clip plein cadre (ex: l'avatar qui
+ * toque sur la caméra, généré via Kling Motion Control). Ne pas superposer la bulle
+ * avatar par-dessus cette scène : elle EST déjà l'avatar en plein cadre.
+ */
+export const hookVideoSceneSchema = z.object({
+  type: z.literal("hookVideo"),
+  durationInSeconds: z.number().positive(),
+  src: z.string().describe("Nom du fichier vidéo dans public/video/ (le clip pattern interrupt)"),
 });
 
 export const statSceneSchema = baseScene.extend({
@@ -47,6 +69,7 @@ export const ctaSceneSchema = baseScene.extend({
 
 export const sceneSchema = z.discriminatedUnion("type", [
   hookSceneSchema,
+  hookVideoSceneSchema,
   statSceneSchema,
   pointSceneSchema,
   quoteSceneSchema,
@@ -61,8 +84,15 @@ export const usdShortSchema = z.object({
   audioFileName: z
     .string()
     .describe("Nom du fichier audio ElevenLabs dans public/audio/, ex: 'feux-de-foret-2026.mp3'"),
+  avatarBubbleSrc: z
+    .string()
+    .optional()
+    .describe(
+      "Clip avatar continu (ton export ElevenLabs lip-sync) dans public/video/, affiché en bulle dans un coin à partir de la fin du hook vidéo."
+    ),
   captionsEnabled: z.boolean(),
   scenes: z.array(sceneSchema).min(1),
 });
 
 export type USDShortProps = z.infer<typeof usdShortSchema>;
+
