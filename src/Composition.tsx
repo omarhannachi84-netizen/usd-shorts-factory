@@ -1,14 +1,18 @@
 import React from "react";
-import { AbsoluteFill, Audio, Series, staticFile } from "remotion";
+import { AbsoluteFill, Audio, staticFile } from "remotion";
+import { TransitionSeries, linearTiming } from "@remotion/transitions";
+import { fade } from "@remotion/transitions/fade";
 import type { z } from "zod";
 import type { usdShortSchema, Scene } from "./schema";
 import { theme } from "./theme";
+import { TRANSITION_DURATION_IN_FRAMES } from "./timing";
 import { HookScene } from "./scenes/HookScene";
 import { StatScene } from "./scenes/StatScene";
 import { PointScene } from "./scenes/PointScene";
 import { QuoteScene } from "./scenes/QuoteScene";
 import { CTAScene } from "./scenes/CTAScene";
 import { Caption } from "./components/Caption";
+import { EmberBackground } from "./components/EmberBackground";
 
 const sceneToCaption = (scene: Scene): string | null => {
   switch (scene.type) {
@@ -51,22 +55,37 @@ export const USDShort: React.FC<z.infer<typeof usdShortSchema>> = ({
     <AbsoluteFill style={{ backgroundColor }}>
       {audioFileName ? <Audio src={staticFile(`audio/${audioFileName}`)} /> : null}
 
-      <Series>
+      {/*
+        Rendu en dehors de la TransitionSeries : cet élément tourne sur la frame
+        absolue de toute la vidéo, jamais réinitialisé par un changement de scène.
+        C'est ce qui évite l'effet "diaporama" — quelque chose bouge en continu,
+        même sur un écran de texte statique.
+      */}
+      <EmberBackground />
+
+      <TransitionSeries>
         {scenes.map((scene, i) => (
-          <Series.Sequence
-            key={i}
-            durationInFrames={Math.round(scene.durationInSeconds * fps)}
-            layout="none"
-          >
-            <AbsoluteFill style={{ backgroundColor: theme.color.background }}>
-              <SceneRenderer scene={scene} />
-              {captionsEnabled && sceneToCaption(scene) ? (
-                <Caption text={sceneToCaption(scene) as string} />
-              ) : null}
-            </AbsoluteFill>
-          </Series.Sequence>
+          <React.Fragment key={i}>
+            <TransitionSeries.Sequence
+              durationInFrames={Math.round(scene.durationInSeconds * fps)}
+            >
+              <AbsoluteFill>
+                <SceneRenderer scene={scene} />
+                {captionsEnabled && sceneToCaption(scene) ? (
+                  <Caption text={sceneToCaption(scene) as string} />
+                ) : null}
+              </AbsoluteFill>
+            </TransitionSeries.Sequence>
+
+            {i < scenes.length - 1 ? (
+              <TransitionSeries.Transition
+                presentation={fade()}
+                timing={linearTiming({ durationInFrames: TRANSITION_DURATION_IN_FRAMES })}
+              />
+            ) : null}
+          </React.Fragment>
         ))}
-      </Series>
+      </TransitionSeries>
     </AbsoluteFill>
   );
 };

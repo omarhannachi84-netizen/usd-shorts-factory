@@ -2,10 +2,8 @@ import React from "react";
 import { Composition, type CalculateMetadataFunction } from "remotion";
 import { USDShort } from "./Composition";
 import { usdShortSchema, type USDShortProps } from "./schema";
+import { totalDurationInFrames } from "./timing";
 import { feuxDeForet2026 } from "./data/feux-de-foret-2026";
-
-const totalDurationInFrames = (props: USDShortProps) =>
-  Math.round(props.scenes.reduce((sum, s) => sum + s.durationInSeconds, 0) * props.fps);
 
 const calculateMetadata: CalculateMetadataFunction<USDShortProps> = async ({ props }) => ({
   durationInFrames: totalDurationInFrames(props),
