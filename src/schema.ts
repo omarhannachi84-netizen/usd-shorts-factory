@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 
-/**
- * Une "scène" = un écran du short. Chaque scène porte sa propre durée en secondes,
- * calée à l'oreille sur la voix off ElevenLabs (voir README, section "Workflow").
- */
-
 const backgroundMediaSchema = z
   .object({
     type: z.enum(["image", "video"]),
@@ -13,7 +8,7 @@ const backgroundMediaSchema = z
   })
   .optional()
   .describe(
-    "Fond réel en plein cadre (ex: intervention pompiers en forêt). Si absent, fond uni + lueur Braise par défaut."
+    "Fond réel en plein cadre POUR CETTE SCÈNE UNIQUEMENT. Pour un fond continu sur tout le short, utiliser globalBackgroundSrc au niveau racine."
   );
 
 const baseScene = z.object({
@@ -27,11 +22,6 @@ export const hookSceneSchema = baseScene.extend({
   text: z.string().describe("Phrase choc, courte, 6-10 mots max"),
 });
 
-/**
- * Scène "hook vidéo" — le pattern interrupt : un clip plein cadre (ex: l'avatar qui
- * toque sur la caméra, généré via Kling Motion Control). Ne pas superposer la bulle
- * avatar par-dessus cette scène : elle EST déjà l'avatar en plein cadre.
- */
 export const hookVideoSceneSchema = z.object({
   type: z.literal("hookVideo"),
   durationInSeconds: z.number().positive(),
@@ -83,16 +73,17 @@ export const usdShortSchema = z.object({
   backgroundColor: zColor(),
   audioFileName: z
     .string()
-    .describe("Nom du fichier audio ElevenLabs dans public/audio/, ex: 'feux-de-foret-2026.mp3'"),
+    .describe("Nom du fichier audio ElevenLabs dans public/audio/"),
   avatarBubbleSrc: z
     .string()
     .optional()
-    .describe(
-      "Clip avatar continu (ton export ElevenLabs lip-sync) dans public/video/, affiché en bulle dans un coin à partir de la fin du hook vidéo."
-    ),
+    .describe("Clip avatar continu (export ElevenLabs lip-sync) dans public/video/, en bulle."),
+  globalBackgroundSrc: z
+    .string()
+    .optional()
+    .describe("Fond vidéo GLOBAL qui défile en continu derrière toutes les scènes. Fichier dans public/video/."),
   captionsEnabled: z.boolean(),
   scenes: z.array(sceneSchema).min(1),
 });
 
 export type USDShortProps = z.infer<typeof usdShortSchema>;
-
