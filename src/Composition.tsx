@@ -22,7 +22,7 @@ const sceneToCaption = (scene: Scene): string | null => {
     case "hook":
       return scene.text;
     case "hookVideo":
-      return null; // le clip porte déjà son propre son/texte
+      return null;
     case "stat":
       return `${scene.value} — ${scene.label}`;
     case "point":
@@ -30,7 +30,7 @@ const sceneToCaption = (scene: Scene): string | null => {
     case "quote":
       return `« ${scene.text} » — ${scene.author}`;
     case "cta":
-      return null; // déjà lisible en gros dans la scène elle-même
+      return null;
   }
 };
 
@@ -56,11 +56,10 @@ export const USDShort: React.FC<z.infer<typeof usdShortSchema>> = ({
   backgroundColor,
   audioFileName,
   avatarBubbleSrc,
+  globalBackgroundSrc,
   captionsEnabled,
   scenes,
 }) => {
-  // La bulle avatar démarre à la fin du hook vidéo (s'il y en a un), pas avant —
-  // sinon elle ferait doublon avec l'avatar déjà plein cadre pendant le hook.
   const firstScene = scenes[0];
   const hookVideoDurationInFrames =
     firstScene?.type === "hookVideo" ? Math.round(firstScene.durationInSeconds * fps) : 0;
@@ -69,11 +68,13 @@ export const USDShort: React.FC<z.infer<typeof usdShortSchema>> = ({
     <AbsoluteFill style={{ backgroundColor }}>
       {audioFileName ? <Audio src={staticFile(`audio/${audioFileName}`)} /> : null}
 
-      {/*
-        Rendu en dehors de la TransitionSeries : cet élément tourne sur la frame
-        absolue de toute la vidéo, jamais réinitialisé par un changement de scène.
-      */}
-      <EmberBackground />
+      {globalBackgroundSrc ? (
+        <Sequence from={hookVideoDurationInFrames} layout="none">
+          <SceneBackground type="video" src={globalBackgroundSrc} />
+        </Sequence>
+      ) : (
+        <EmberBackground />
+      )}
 
       <TransitionSeries>
         {scenes.map((scene, i) => (
@@ -82,7 +83,7 @@ export const USDShort: React.FC<z.infer<typeof usdShortSchema>> = ({
               durationInFrames={Math.round(scene.durationInSeconds * fps)}
             >
               <AbsoluteFill>
-                {scene.type !== "hookVideo" && scene.background ? (
+                {!globalBackgroundSrc && scene.type !== "hookVideo" && scene.background ? (
                   <SceneBackground type={scene.background.type} src={scene.background.src} />
                 ) : null}
                 <SceneRenderer scene={scene} />
