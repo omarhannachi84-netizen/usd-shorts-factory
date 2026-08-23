@@ -1,25 +1,18 @@
 import type { USDShortProps } from "../schema";
 import { theme } from "../theme";
 
-/**
- * Gabarit de données pour un short. Pour un nouvel article :
- * 1. Dupliquez ce fichier (ex: src/data/mon-nouvel-article.ts).
- * 2. Adaptez le texte des scènes à l'article.
- * 3. Réglez `durationInSeconds` de chaque scène à l'oreille sur votre export ElevenLabs.
- * 4. Déposez le mp3 ElevenLabs dans public/audio/ et mettez à jour `audioFileName`.
- * 5. Enregistrez la nouvelle composition dans src/Root.tsx (voir commentaire là-bas).
- */
 export const feuxDeForet2026: USDShortProps = {
   fps: 30,
   backgroundColor: theme.color.background,
-  audioFileName: "feux-de-foret-2026.mp3", // à déposer dans public/audio/
-  avatarBubbleSrc: "avatar-feux-de-foret-2026.mp4", // ton export ElevenLabs (lip-sync), à déposer dans public/video/
+  audioFileName: "feux-de-foret-2026.mp3",
+  avatarBubbleSrc: "avatar-feux-de-foret-2026.mp4",
+  globalBackgroundSrc: "pompiers-foret-intervention.mp4",
   captionsEnabled: true,
   scenes: [
     {
       type: "hookVideo",
       durationInSeconds: 3,
-      src: "hook-toc-toc.mp4", // le clip pattern interrupt (Kling), à déposer dans public/video/
+      src: "hook-toc-toc.mp4",
     },
     {
       type: "stat",
@@ -27,7 +20,6 @@ export const feuxDeForet2026: USDShortProps = {
       value: "42 000 ha",
       label: "déjà brûlés à la mi-juillet 2026 — un record",
       source: "EFFIS / Touteleurope, 2026",
-      background: { type: "video", src: "pompiers-foret-intervention.mp4" },
     },
     {
       type: "point",
@@ -52,7 +44,6 @@ export const feuxDeForet2026: USDShortProps = {
       total: 3,
       title: "Rester Utile",
       text: "Premiers secours et entraide, une fois en sécurité.",
-      background: { type: "image", src: "pompiers-foret-briefing.jpg" },
     },
     {
       type: "quote",
