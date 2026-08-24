@@ -6,6 +6,10 @@ import type { PinSet } from "../../pins/schema";
  * ▶ POUR UN NOUVEL ARTICLE : dupliquer ce fichier, changer le slug, l'URL et
  *   les textes. Puis ajouter le lot à ALL_PIN_SETS dans src/Root.tsx.
  *
+ * ▶ PHOTOS : les épingles hero/checklist peuvent avoir un fond photo. Déposer
+ *   le fichier dans public/images/ et ajouter `photo: "nom-du-fichier.jpg"`.
+ *   Sans photo, le gabarit bascule sur un fond Braise dégradé.
+ *
  * ▶ Publication échelonnée : J+0 hero · J+2 checklist · J+4 contre · J+6 methode
  */
 export const feuxDeForet2026Pins: PinSet = {
@@ -18,7 +22,7 @@ export const feuxDeForet2026Pins: PinSet = {
       slug: "feux-de-foret-2026",
       eyebrow: "Feux de forêt 2026",
       headline: "Le guide de préparation qui sauve des vies",
-      photo: "preparation-sac-evacuation.jpg",
+      photo: "",
     },
     {
       type: "checklist",
@@ -32,7 +36,6 @@ export const feuxDeForet2026Pins: PinSet = {
         "Radio FM/AM à manivelle",
         "Trousse de premiers secours",
       ],
-      photo: "preparation-sac-evacuation.jpg",
     },
     {
       type: "contre",
