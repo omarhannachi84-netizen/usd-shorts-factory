@@ -67,8 +67,8 @@ export const PinFrame: React.FC<{
         style={{
           paddingLeft: MARGIN,
           paddingRight: MARGIN,
-          paddingTop: MARGIN + 130,
-          paddingBottom: BOTTOM_RESERVED + 110,
+          paddingTop: MARGIN + 90,
+          paddingBottom: BOTTOM_RESERVED + 80,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
