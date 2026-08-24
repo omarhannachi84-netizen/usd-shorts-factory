@@ -20,7 +20,7 @@ import { AvatarBubble } from "./components/AvatarBubble";
 const sceneToCaption = (scene: Scene): string | null => {
   switch (scene.type) {
     case "hook":
-      return scene.text;
+      return scene.text ? scene.text : null;
     case "hookVideo":
       return null;
     case "stat":
@@ -37,6 +37,8 @@ const sceneToCaption = (scene: Scene): string | null => {
 const SceneRenderer: React.FC<{ scene: Scene }> = ({ scene }) => {
   switch (scene.type) {
     case "hook":
+      // Scène "vide" volontaire : laisse voir le hook déjà présent dans la vidéo de fond.
+      if (!scene.text && !scene.eyebrow) return null;
       return <HookScene {...scene} />;
     case "hookVideo":
       return <HookVideoScene {...scene} />;
@@ -64,14 +66,21 @@ export const USDShort: React.FC<z.infer<typeof usdShortSchema>> = ({
   const hookVideoDurationInFrames =
     firstScene?.type === "hookVideo" ? Math.round(firstScene.durationInSeconds * fps) : 0;
 
+  // La bulle avatar démarre après le hook (intégré à la vidéo de fond ici : 3s).
+  const avatarStartFrame =
+    hookVideoDurationInFrames > 0
+      ? hookVideoDurationInFrames
+      : Math.round((firstScene?.durationInSeconds ?? 0) * fps);
+
+  // Si pas de mp3 séparé, le son vient de la vidéo de fond (montage CapCut).
+  const backgroundCarriesAudio = !audioFileName;
+
   return (
     <AbsoluteFill style={{ backgroundColor }}>
       {audioFileName ? <Audio src={staticFile(`audio/${audioFileName}`)} /> : null}
 
       {globalBackgroundSrc ? (
-        <Sequence from={hookVideoDurationInFrames} layout="none">
-          <SceneBackground type="video" src={globalBackgroundSrc} />
-        </Sequence>
+        <SceneBackground type="video" src={globalBackgroundSrc} muted={!backgroundCarriesAudio} />
       ) : (
         <EmberBackground />
       )}
@@ -104,7 +113,7 @@ export const USDShort: React.FC<z.infer<typeof usdShortSchema>> = ({
       </TransitionSeries>
 
       {avatarBubbleSrc ? (
-        <Sequence from={hookVideoDurationInFrames} layout="none">
+        <Sequence from={avatarStartFrame} layout="none">
           <AvatarBubble src={avatarBubbleSrc} />
         </Sequence>
       ) : null}

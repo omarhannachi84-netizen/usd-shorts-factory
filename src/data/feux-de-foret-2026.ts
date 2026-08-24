@@ -1,29 +1,40 @@
 import type { USDShortProps } from "../schema";
 import { theme } from "../theme";
 
+/**
+ * Configuration "montage CapCut" :
+ * - La vidéo de fond contient DÉJÀ le hook + les images + la voix off (45s).
+ * - Remotion n'ajoute par-dessus que la bulle avatar et le texte LMU.
+ * - Pas de mp3 séparé (le son vient de la vidéo de fond) → audioFileName vide.
+ *
+ * ⚠️ DURÉES : chaque transition en fondu fait se chevaucher deux scènes de 12
+ * images (0,4 s). Avec 7 scènes → 6 transitions → 2,4 s "avalées". Pour obtenir
+ * 45 s à l'écran, la somme des scènes doit donc valoir 45 + 2,4 = 47,4 s.
+ */
 export const feuxDeForet2026: USDShortProps = {
   fps: 30,
   backgroundColor: theme.color.background,
-  audioFileName: "feux-de-foret-2026.mp3",
+  audioFileName: "",
   avatarBubbleSrc: "avatar-feux-de-foret-2026.mp4",
   globalBackgroundSrc: "pompiers-foret-intervention.mp4",
   captionsEnabled: true,
   scenes: [
     {
-      type: "hookVideo",
-      durationInSeconds: 3,
-      src: "hook-toc-toc.mp4",
+      type: "hook",
+      durationInSeconds: 3.4,
+      eyebrow: "",
+      text: "",
     },
     {
       type: "stat",
-      durationInSeconds: 4,
+      durationInSeconds: 6.4,
       value: "42 000 ha",
       label: "déjà brûlés à la mi-juillet 2026 — un record",
       source: "EFFIS / Touteleurope, 2026",
     },
     {
       type: "point",
-      durationInSeconds: 5,
+      durationInSeconds: 8.4,
       index: 1,
       total: 3,
       title: "Rester Lucide",
@@ -31,7 +42,7 @@ export const feuxDeForet2026: USDShortProps = {
     },
     {
       type: "point",
-      durationInSeconds: 5,
+      durationInSeconds: 8.4,
       index: 2,
       total: 3,
       title: "Rester Mobile",
@@ -39,7 +50,7 @@ export const feuxDeForet2026: USDShortProps = {
     },
     {
       type: "point",
-      durationInSeconds: 5,
+      durationInSeconds: 8.4,
       index: 3,
       total: 3,
       title: "Rester Utile",
@@ -47,14 +58,14 @@ export const feuxDeForet2026: USDShortProps = {
     },
     {
       type: "quote",
-      durationInSeconds: 6,
+      durationInSeconds: 7.4,
       text: "On maîtrise trois choses dans un feu de forêt : sa tête, ses jambes, sa capacité à agir utilement.",
       author: "OH",
       role: "Fondateur d'Urban Survival District",
     },
     {
       type: "cta",
-      durationInSeconds: 4,
+      durationInSeconds: 5,
       headline: "Votre sac est-il prêt ?",
       subtext: "Guide complet — méthode LMU en bio",
       handle: "@UrbanSurvivalDistrict",

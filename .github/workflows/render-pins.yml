@@ -1,0 +1,46 @@
+name: Render Pinterest Pins
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Slug de l'article (ex: feux-de-foret-2026)"
+        required: false
+        default: "feux-de-foret-2026"
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: List compositions
+        run: npx remotion compositions || true
+
+      - name: Render pins
+        run: |
+          mkdir -p out/pins
+          SLUG="${{ github.event.inputs.slug }}"
+
+          for TYPE in hero checklist contre methode; do
+            COMP="pin-${SLUG}-${TYPE}"
+            echo "=== Rendu $COMP ==="
+            npx remotion still "$COMP" "out/pins/${COMP}.png"
+          done
+
+          ls -la out/pins/
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pins-${{ github.run_id }}
+          path: out/pins/
+          retention-days: 30
