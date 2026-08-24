@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       slug:
-        description: "Slug de l'article (ex: feux-de-foret-2026). Vide = tout rendre."
+        description: "Slug de l'article (ex: feux-de-foret-2026)"
         required: false
-        default: ""
+        default: "feux-de-foret-2026"
 
 jobs:
   render:
@@ -22,25 +22,18 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: List compositions
+        run: npx remotion compositions || true
+
       - name: Render pins
         run: |
           mkdir -p out/pins
           SLUG="${{ github.event.inputs.slug }}"
 
-          npx remotion compositions --quiet > /tmp/all.txt 2>/dev/null || true
-          COMPS=$(grep -o '^pin-[a-z0-9-]*' /tmp/all.txt | sort -u)
-
-          if [ -z "$COMPS" ]; then
-            echo "::error::Aucune composition 'pin-*' trouvee. Verifier src/Root.tsx."
-            exit 1
-          fi
-
-          for comp in $COMPS; do
-            if [ -n "$SLUG" ] && ! echo "$comp" | grep -q "$SLUG"; then
-              continue
-            fi
-            echo "Rendu $comp"
-            npx remotion still "$comp" "out/pins/${comp}.png"
+          for TYPE in hero checklist contre methode; do
+            COMP="pin-${SLUG}-${TYPE}"
+            echo "=== Rendu $COMP ==="
+            npx remotion still "$COMP" "out/pins/${COMP}.png"
           done
 
           ls -la out/pins/
@@ -51,4 +44,3 @@ jobs:
           name: pins-${{ github.run_id }}
           path: out/pins/
           retention-days: 30
-          
