@@ -8,7 +8,7 @@ const HeroPin: React.FC<Extract<Pin, { type: "hero" }>> = ({ eyebrow, headline, 
     <div
       style={{
         fontFamily: theme.font.display,
-        fontSize: 86,
+        fontSize: 96,
         fontWeight: 700,
         lineHeight: 1.1,
         color: theme.color.text,
@@ -25,7 +25,7 @@ const ContrePin: React.FC<Extract<Pin, { type: "contre" }>> = ({ eyebrow, punch,
     <div
       style={{
         fontFamily: theme.font.display,
-        fontSize: 104,
+        fontSize: 112,
         fontWeight: 700,
         lineHeight: 1.05,
         color: theme.color.ember,
@@ -35,7 +35,7 @@ const ContrePin: React.FC<Extract<Pin, { type: "contre" }>> = ({ eyebrow, punch,
     </div>
     <div
       style={{
-        marginTop: 44,
+        marginTop: 48,
         width: 90,
         height: 5,
         backgroundColor: theme.color.text,
@@ -45,9 +45,9 @@ const ContrePin: React.FC<Extract<Pin, { type: "contre" }>> = ({ eyebrow, punch,
     />
     <div
       style={{
-        marginTop: 44,
+        marginTop: 48,
         fontFamily: theme.font.body,
-        fontSize: 42,
+        fontSize: 48,
         lineHeight: 1.35,
         color: theme.color.text,
       }}
@@ -67,30 +67,30 @@ const ChecklistPin: React.FC<Extract<Pin, { type: "checklist" }>> = ({
     <div
       style={{
         fontFamily: theme.font.display,
-        fontSize: 72,
+        fontSize: 82,
         fontWeight: 700,
         lineHeight: 1.12,
         color: theme.color.text,
-        marginBottom: 56,
+        marginBottom: 64,
       }}
     >
       {headline}
     </div>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 38 }}>
       {items.map((item, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: 26 }}>
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <div
             style={{
-              minWidth: 62,
-              height: 62,
-              borderRadius: 31,
+              minWidth: 70,
+              height: 70,
+              borderRadius: 35,
               backgroundColor: theme.color.ember,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontFamily: theme.font.display,
-              fontSize: 34,
+              fontSize: 38,
               fontWeight: 700,
               color: theme.color.text,
             }}
@@ -100,7 +100,7 @@ const ChecklistPin: React.FC<Extract<Pin, { type: "checklist" }>> = ({
           <div
             style={{
               fontFamily: theme.font.body,
-              fontSize: 40,
+              fontSize: 46,
               lineHeight: 1.25,
               color: theme.color.text,
             }}
@@ -118,28 +118,28 @@ const MethodePin: React.FC<Extract<Pin, { type: "methode" }>> = ({ eyebrow, pill
     <div
       style={{
         fontFamily: theme.font.display,
-        fontSize: 78,
+        fontSize: 88,
         fontWeight: 700,
         lineHeight: 1.1,
         color: theme.color.text,
-        marginBottom: 64,
+        marginBottom: 72,
       }}
     >
       La méthode <span style={{ color: theme.color.ember }}>LMU</span>
     </div>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: 44 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 52 }}>
       {pillars.map((p, i) => (
-        <div key={i} style={{ display: "flex", gap: 24 }}>
+        <div key={i} style={{ display: "flex", gap: 26 }}>
           <div style={{ minWidth: 6, backgroundColor: theme.color.ember, borderRadius: 3 }} />
           <div>
             <div
               style={{
                 fontFamily: theme.font.display,
-                fontSize: 46,
+                fontSize: 52,
                 fontWeight: 700,
                 color: theme.color.text,
-                marginBottom: 10,
+                marginBottom: 12,
               }}
             >
               {p.title}
@@ -147,7 +147,7 @@ const MethodePin: React.FC<Extract<Pin, { type: "methode" }>> = ({ eyebrow, pill
             <div
               style={{
                 fontFamily: theme.font.body,
-                fontSize: 34,
+                fontSize: 38,
                 lineHeight: 1.3,
                 color: theme.color.textMuted,
               }}
